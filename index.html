@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Personal Golf Tracker</title>
+  <style>
+    :root {
+      --bg: #f4f7f2;
+      --card: #ffffff;
+      --text: #1f2937;
+      --muted: #6b7280;
+      --green: #1f6f43;
+      --green-dark: #155233;
+      --line: #dbe3d7;
+      --soft: #eef4ec;
+      --danger: #b42318;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    .wrap {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    .hero {
+      background: linear-gradient(135deg, #1f6f43, #2d8b57);
+      color: white;
+      border-radius: 18px;
+      padding: 24px;
+      margin-bottom: 18px;
+    }
+
+    .hero h1 {
+      margin: 0 0 8px;
+      font-size: 32px;
+    }
+
+    .hero p {
+      margin: 0;
+      opacity: 0.95;
+    }
+
+    .grid {
+      display: grid;
+      gap: 16px;
+    }
+
+    .grid.cards {
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      margin-bottom: 18px;
+    }
+
+    .grid.main {
+      grid-template-columns: 340px 1fr;
+      align-items: start;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 18px;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.04);
+    }
+
+    .stat-label {
+      color: var(--muted);
+      font-size: 13px;
+      margin-bottom: 8px;
+    }
+
+    .stat-value {
+      font-size: 30px;
+      font-weight: 700;
+    }
+
+    h2, h3 {
+      margin-top: 0;
+    }
+
+    label {
+      display: block;
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 6px;
+      font-weight: 700;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 11px 12px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      font-size: 14px;
+      background: white;
+      margin-bottom: 12px;
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 90px;
+    }
+
+    .row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .btn {
+      border: 0;
+      border-radius: 12px;
+      padding: 12px 14px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .btn-primary {
+      background: var(--green);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: var(--green-dark);
+    }
+
+    .btn-soft {
+      background: var(--soft);
+      color: var(--green-dark);
+    }
+
+    .btn-danger {
+      background: #fee4e2;
+      color: var(--danger);
+    }
+
+    .pill {
+      display: inline-block;
+      background: var(--soft);
+      color: var(--green-dark);
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 700;
+      margin: 0 6px 6px 0;
+    }
+
+    .players {
+      margin-bottom: 10px;
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 760px;
+    }
+
+    th, td {
+      padding: 10px 8px;
+      border-bottom: 1px solid var(--line);
+      text-align: left;
+      font-size: 14px;
+      vertical-align: top;
+    }
+
+    th {
+      color: var(--muted);
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .table-input,
+    .table-select {
+      width: 100%;
+      margin: 0;
+      min-width: 70px;
+    }
+
+    .history-item {
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 14px;
+      margin-bottom: 12px;
+      background: #fcfdfc;
+    }
+
+    .history-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: flex-start;
+      flex-wrap: wrap;
+    }
+
+    .history-title {
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .history-sub {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .history-actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .toggle {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 14px;
+      font-size: 14px;
+    }
+
+    .toggle input {
+      width: auto;
+      margin: 0;
+    }
+
+    .section-space {
+      margin-top: 18px;
+    }
+
+    .empty {
+      color: var(--muted);
+      font-size: 14px;
+      background: #fafcf9;
+      border: 1px dashed var(--line);
+      border-radius: 14px;
+      padding: 16px;
+    }
+
+    @media (max-width: 900px) {
+      .grid.main {
+        grid-template-columns: 1fr;
+      }
+
+      .hero h1 {
+        font-size: 26px;
+      }
+
+      .row {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="hero">
+      <h1>Personal Golf Tracker</h1>
+      <p>Track rounds, stats, and playing partners for any course you play.</p>
+    </div>
+
+    <div class="grid cards">
+      <div class="card">
+        <div class="stat-label">Rounds Played</div>
+        <div class="stat-value" id="statRoundsPlayed">0</div>
+      </div>
+      <div class="card">
+        <div class="stat-label">Stat Rounds</div>
+        <div class="stat-value" id="statRoundsTracked">0</div>
+      </div>
+      <div class="card">
+        <div class="stat-label">Fairway Hit</div>
+        <div class="stat-value" id="statFairways">0%</div>
+      </div>
+      <div class="card">
+        <div class="stat-label">GIR</div>
+        <div class="stat-value" id="statGir">0%</div>
+      </div>
+      <div class="card">
+        <div class="stat-label">Putts Per Hole</div>
+        <div class="stat-value" id="statPutts">0.00</div>
+      </div>
+    </div>
+
+    <div class="grid main">
+      <div class="card">
+        <h2>New Round</h2>
+
+        <label for="date">Date</label>
+        <input id="date" type="date" />
+
+        <label for="course">Course Name</label>
+        <input id="course" type="text" placeholder="Marsh Landing Country Club" />
+
+        <div class="row">
+          <div>
+            <label for="tee">Tees</label>
+            <select id="tee">
+              <option value="Gold">Gold</option>
+              <option value="Blue">Blue</option>
+              <option value="White">White</option>
+              <option value="Black">Black</option>
+              <option value="Red">Red</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+          <div>
+            <label for="roundType">Round Type</label>
+            <select id="roundType">
+              <option value="Stroke Play">Stroke Play</option>
+              <option value="Practice">Practice</option>
+              <option value="Scramble">Scramble</option>
+              <option value="Best Ball">Best Ball</option>
+              <option value="Match Play">Match Play</option>
+            </select>
+          </div>
+        </div>
+
+        <label for="players">Players</label>
+        <input id="players" type="text" placeholder="Michael, Luke, John" />
+
+        <label class="toggle">
+          <input id="countsTowardStats" type="checkbox" checked />
+          Count this round in personal stats
+        </label>
+
+        <label for="roundNotes">Round Notes</label>
+        <textarea id="roundNotes" placeholder="Weather, swing thoughts, match notes"></textarea>
+
+        <button class="btn btn-primary" onclick="startRound()">Start Round</button>
+
+        <div class="section-space">
+          <h3>Current Round Players</h3>
+          <div class="players" id="playersPreview"></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Hole by Hole Tracking</h2>
+        <div id="roundArea" class="empty">Start a round to enter stats.</div>
+      </div>
+    </div>
+
+    <div class="card section-space">
+      <h2>Round History</h2>
+      <div id="historyArea" class="empty">No rounds saved yet.</div>
+    </div>
+  </div>
+
+  <script>
+    const STORAGE_KEY = 'personal-golf-tracker-single-file-v2';
+    let currentRound = null;
+
+    function todayString() {
+      return new Date().toISOString().slice(0, 10);
+    }
+
+    function defaultHoles() {
+      return Array.from({ length: 18 }, (_, i) => ({
+        hole: i + 1,
+        par: '',
+        score: '',
+        fairway: '',
+        gir: '',
+        putts: '',
+        notes: ''
+      }));
+    }
+
+    function loadRounds() {
+      try {
+        return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+      } catch {
+        return [];
+      }
+    }
+
+    function saveRounds(rounds) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(rounds));
+    }
+
+    function pct(numerator, denominator) {
+      if (!denominator) return '0%';
+      return Math.round((numerator / denominator) * 100) + '%';
+    }
+
+    function getScore(round) {
+      return (round.holes || []).reduce((sum, h) => sum + (parseInt(h.score, 10) || 0), 0);
+    }
+
+    function updatePlayersPreview() {
+      const raw = document.getElementById('players').value.trim();
+      const players = raw
+        ? raw.split(',').map(x => x.trim()).filter(Boolean)
+        : [];
+      const el = document.getElementById('playersPreview');
+      if (!players.length) {
+        el.innerHTML = '<span class="pill">No players added yet</span>';
+        return;
+      }
+      el.innerHTML = players.map(p => `<span class="pill">${escapeHtml(p)}</span>`).join('');
+    }
+
+    function escapeHtml(value) {
+      return String(value)
+        .replaceAll('&', '&amp;')
+        .replaceAll('<', '&lt;')
+        .replaceAll('>', '&gt;')
+        .replaceAll('"', '&quot;')
+        .replaceAll("'", '&#039;');
+    }
+
+    function startRound() {
+      const course = document.getElementById('course').value.trim();
+      const playersRaw = document.getElementById('players').value.trim();
+      const roundType = document.getElementById('roundType').value;
+
+      currentRound = {
+        id: crypto.randomUUID(),
+        date: document.getElementById('date').value || todayString(),
+        course: course || 'Unnamed Course',
+        tee: document.getElementById('tee').value,
+        roundType,
+        countsTowardStats: document.getElementById('countsTowardStats').checked,
+        players: playersRaw
+          ? playersRaw.split(',').map(x => x.trim()).filter(Boolean)
+          : ['Michael'],
+        notes: document.getElementById('roundNotes').value.trim(),
+        holes: defaultHoles()
+      };
+
+      if (roundType === 'Scramble' || roundType === 'Best Ball') {
+        currentRound.countsTowardStats = document.getElementById('countsTowardStats').checked;
+      }
+
+      renderCurrentRound();
+    }
+
+    function updateHole(holeIndex, field, value) {
+      if (!currentRound) return;
+      currentRound.holes[holeIndex][field] = value;
+    }
+
+    function renderCurrentRound() {
+      if (!currentRound) {
+        document.getElementById('roundArea').innerHTML = 'Start a round to enter stats.';
+        return;
+      }
+
+      let html = `
+        <div class="pill">${escapeHtml(currentRound.course)}</div>
+        <div class="pill">${escapeHtml(currentRound.tee)}</div>
+        <div class="pill">${escapeHtml(currentRound.roundType)}</div>
+        <div class="pill">${currentRound.countsTowardStats ? 'Included in Stats' : 'Excluded from Stats'}</div>
+        <div class="table-wrap section-space">
+          <table>
+            <thead>
+              <tr>
+                <th>Hole</th>
+                <th>Par</th>
+                <th>Score</th>
+                <th>Fairway</th>
+                <th>GIR</th>
+                <th>Putts</th>
+                <th>Notes</th>
+              </tr>
+            </thead>
+            <tbody>
+      `;
+
+      currentRound.holes.forEach((hole, idx) => {
+        html += `
+          <tr>
+            <td>${hole.hole}</td>
+            <td><input class="table-input" type="number" min="3" max="6" value="${escapeHtml(hole.par)}" onchange="updateHole(${idx}, 'par', this.value)"></td>
+            <td><input class="table-input" type="number" min="1" max="15" value="${escapeHtml(hole.score)}" onchange="updateHole(${idx}, 'score', this.value)"></td>
+            <td>
+              <select class="table-select" onchange="updateHole(${idx}, 'fairway', this.value)">
+                <option value="" ${hole.fairway === '' ? 'selected' : ''}></option>
+                <option value="Y" ${hole.fairway === 'Y' ? 'selected' : ''}>Y</option>
+                <option value="N" ${hole.fairway === 'N' ? 'selected' : ''}>N</option>
+              </select>
+            </td>
+            <td>
+              <select class="table-select" onchange="updateHole(${idx}, 'gir', this.value)">
+                <option value="" ${hole.gir === '' ? 'selected' : ''}></option>
+                <option value="Y" ${hole.gir === 'Y' ? 'selected' : ''}>Y</option>
+                <option value="N" ${hole.gir === 'N' ? 'selected' : ''}>N</option>
+              </select>
+            </td>
+            <td><input class="table-input" type="number" min="0" max="8" value="${escapeHtml(hole.putts)}" onchange="updateHole(${idx}, 'putts', this.value)"></td>
+            <td><input class="table-input" type="text" value="${escapeHtml(hole.notes)}" onchange="updateHole(${idx}, 'notes', this.value)"></td>
+          </tr>
+        `;
+      });
+
+      html += `
+            </tbody>
+          </table>
+        </div>
+        <div class="section-space">
+          <button class="btn btn-primary" onclick="saveCurrentRound()">Save Round</button>
+        </div>
+      `;
+
+      document.getElementById('roundArea').innerHTML = html;
+    }
+
+    function saveCurrentRound() {
+      if (!currentRound) return;
+      const rounds = loadRounds();
+      rounds.unshift(currentRound);
+      saveRounds(rounds);
+      currentRound = null;
+      document.getElementById('roundArea').innerHTML = '<div class="empty">Round saved. Start another round when ready.</div>';
+      renderHistory();
+      renderStats();
+    }
+
+    function deleteRound(id) {
+      const rounds = loadRounds().filter(r => r.id !== id);
+      saveRounds(rounds);
+      renderHistory();
+      renderStats();
+    }
+
+    function renderHistory() {
+      const rounds = loadRounds();
+      const area = document.getElementById('historyArea');
+
+      if (!rounds.length) {
+        area.className = 'empty';
+        area.innerHTML = 'No rounds saved yet.';
+        return;
+      }
+
+      area.className = '';
+      area.innerHTML = rounds.map(round => `
+        <div class="history-item">
+          <div class="history-top">
+            <div>
+              <div class="history-title">${escapeHtml(round.course)} • ${escapeHtml(round.date)}</div>
+              <div class="history-sub">
+                ${escapeHtml(round.tee)} • ${escapeHtml(round.roundType)} • Score: ${getScore(round) || 'N/A'} • ${round.countsTowardStats ? 'Included in stats' : 'Excluded from stats'}
+              </div>
+              <div class="history-sub">
+                Players: ${escapeHtml((round.players || []).join(', ') || 'None')}
+              </div>
+            </div>
+            <div class="history-actions">
+              <button class="btn btn-danger" onclick="deleteRound('${round.id}')">Delete</button>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function renderStats() {
+      const rounds = loadRounds();
+      const statRounds = rounds.filter(r => r.countsTowardStats);
+      const holes = statRounds.flatMap(r => r.holes || []);
+
+      const fairwayAttempts = holes.filter(h => h.fairway !== '').length;
+      const fairwaysHit = holes.filter(h => h.fairway === 'Y').length;
+      const girAttempts = holes.filter(h => h.gir !== '').length;
+      const girHit = holes.filter(h => h.gir === 'Y').length;
+      const puttHoles = holes.filter(h => h.putts !== '' && !isNaN(Number(h.putts)));
+      const totalPutts = puttHoles.reduce((sum, h) => sum + Number(h.putts || 0), 0);
+
+      document.getElementById('statRoundsPlayed').textContent = rounds.length;
+      document.getElementById('statRoundsTracked').textContent = statRounds.length;
+      document.getElementById('statFairways').textContent = pct(fairwaysHit, fairwayAttempts);
+      document.getElementById('statGir').textContent = pct(girHit, girAttempts);
+      document.getElementById('statPutts').textContent = puttHoles.length ? (totalPutts / puttHoles.length).toFixed(2) : '0.00';
+    }
+
+    document.getElementById('date').value = todayString();
+    document.getElementById('players').addEventListener('input', updatePlayersPreview);
+
+    updatePlayersPreview();
+    renderHistory();
+    renderStats();
+  </script>
+</body>
+</html>
